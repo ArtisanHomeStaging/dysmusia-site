@@ -79,5 +79,104 @@
   },
   "footer": {
     "blurb": "An independent, informational project exploring why some capable musicians struggle to read music — and finding better ways to teach them. Not a diagnostic tool or medical advice."
+  },
+  "multisensoryLearning": {
+    "hero": {
+      "eyebrow": "Try strategies",
+      "heading": "Multisensory Learning",
+      "dek": "When reading notation in isolation doesn't work, routing the same information through other senses often does."
+    },
+    "intro": "Multisensory instruction is well established for language-based dyslexia — approaches like Orton-Gillingham are built entirely around it. The same logic applies to music: instead of relying on sight-reading alone, these approaches route the same musical information through color, movement, sound, story, and touch, giving the brain more than one path to the same meaning.",
+    "senses": [
+      {
+        "label": "Color",
+        "tag": "Visual pattern",
+        "body": "Assigning a consistent color to each note name or string turns an abstract symbol into a visual pattern the eye can catch quickly.",
+        "items": [
+          "Color-coded strings or keys matched to color-coded noteheads",
+          "A \"Colour Staff\" system, where lines and spaces are tinted rather than plain black",
+          "Highlighting repeating visual landmarks (the same measure, the same interval shape) in a consistent color"
+        ]
+      },
+      {
+        "label": "Movement",
+        "tag": "Body mapping",
+        "body": "Mapping pitch or rhythm onto the body or a physical space turns an abstract relationship into something felt.",
+        "items": [
+          "A floor staff large enough to walk on, stepping \"up\" and \"down\" as pitch rises and falls",
+          "Conducting or clapping patterns that mirror note duration before ever reading it",
+          "Hand-signing pitch height (a system borrowed from Kodály-style teaching) alongside the printed note"
+        ]
+      },
+      {
+        "label": "Sound",
+        "tag": "Listening first",
+        "body": "Hearing a passage before reading it gives the ear a target to match the page against, instead of decoding cold.",
+        "items": [
+          "Listening to a short phrase on repeat before attempting to read it",
+          "Singing a line by ear, then locating it on the staff afterward",
+          "Call-and-response rhythm games that build a felt sense of timing before notation is introduced"
+        ]
+      },
+      {
+        "label": "Story",
+        "tag": "Imagination & narrative",
+        "body": "Attaching a short story or image to a musical pattern gives working memory something more durable to hold onto than an abstract symbol.",
+        "items": [
+          "Mnemonic phrases for line and space note names",
+          "Character-based stories for recurring rhythmic patterns (\"the running notes,\" \"the resting note\")",
+          "Verbal patterns or chants that mirror a rhythm's shape"
+        ]
+      },
+      {
+        "label": "Touch",
+        "tag": "Physical interaction",
+        "body": "Physically manipulating notation — rather than only looking at it — adds a motor memory trace to a visual one.",
+        "items": [
+          "Tracing notation with a finger while naming it aloud",
+          "Building phrases from movable, tactile note cards before writing them",
+          "Finger-position landmarks on an instrument tied to specific staff positions"
+        ]
+      }
+    ]
+  },
+  "history": {
+    "hero": {
+      "eyebrow": "Explore research",
+      "heading": "A History of Music-Reading Difficulties",
+      "dek": "Not just the history of a word — the longer story of how researchers came to notice this pattern at all."
+    },
+    "timeline": [
+      {
+        "year": "1970s",
+        "title": "Early multisensory notation teaching",
+        "body": "Margaret Hubicki develops the Colour Staff system for teaching notation, years before multisensory literacy instruction became widely recognized in the UK."
+      },
+      {
+        "year": "1980",
+        "title": "Early prevalence estimates",
+        "body": "Kalmus and Fry publish early estimates distinguishing self-reported \"tone-deafness\" from measured perceptual difficulty with music, laying groundwork for later prevalence research."
+      },
+      {
+        "year": "1990s–2000s",
+        "title": "Congenital amusia research develops",
+        "body": "Isabelle Peretz, Julie Ayotte, and colleagues at the University of Montreal study adults with lifelong musical-listening difficulty, establishing it as a distinct, measurable perceptual pattern rather than a vague self-description."
+      },
+      {
+        "year": "2000",
+        "title": "\"Musical dyslexia\" proposed",
+        "body": "Retired pediatric neurologist Dr. Neil Gordon coins the term, explicitly drawing the parallel to dyslexia and dyscalculia."
+      },
+      {
+        "year": "2000s",
+        "title": "Music-and-dyslexia specialists collect case studies",
+        "body": "Music teachers and language therapists — including T. R. Miles and John Westcombe, editors of Music and Dyslexia — begin compiling case studies and early research specifically on notation-reading difficulty in dyslexic musicians."
+      },
+      {
+        "year": "2010s–present",
+        "title": "Growing but still thin research base",
+        "body": "Interest in the overlap between dyslexia and music grows among educators, but the research base remains small relative to language-based dyslexia — leaving most working knowledge in the hands of specialist teachers rather than large studies."
+      }
+    ]
   }
 }

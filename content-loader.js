@@ -4,6 +4,9 @@
 // without touching the HTML.
 
 (function () {
+  var scriptEl = document.currentScript;
+  var contentUrl = new URL('content.json', scriptEl.src);
+
   function getPath(obj, path) {
     return path.split('.').reduce(function (o, k) {
       return o && o[k] !== undefined ? o[k] : undefined;
@@ -44,7 +47,7 @@
     }
   }
 
-  fetch('content.json')
+  fetch(contentUrl)
     .then(function (res) { return res.json(); })
     .then(applyContent)
     .catch(function (err) { console.error('Could not load content.json', err); });

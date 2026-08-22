@@ -323,7 +323,9 @@ footer{background:var(--paper); border-top:1px solid var(--line); padding:56px 0
 }
 .footer-col a{display:block; text-decoration:none; color:var(--ink-soft); font-size:13.5px; margin-bottom:9px;}
 .footer-col a:hover{color:var(--purple);}
-.footer-bottom{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color:var(--ink-soft);}
+.footer-bottom{border-top:1px solid var(--line); padding-top:20px; font-size:12px; color:var(--ink-soft); display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;}
+.footer-admin-link{color:var(--ink-soft); opacity:0.55; font-size:11px; text-decoration:none;}
+.footer-admin-link:hover{opacity:1; text-decoration:underline;}
 
 /* ============ FOCUS / A11Y ============ */
 a:focus-visible, button:focus-visible, input:focus-visible{

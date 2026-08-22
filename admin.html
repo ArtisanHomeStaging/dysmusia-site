@@ -38,6 +38,14 @@
   }
   .field textarea{min-height:70px; resize:vertical;}
   .field input:focus, .field textarea:focus{outline:2px solid var(--purple); outline-offset:1px;}
+  .page-tabs{display:flex; gap:6px; margin:0 0 28px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding-bottom:0;}
+  .page-tab{
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; color:var(--ink-soft);
+    background:none; border:none; border-bottom:2px solid transparent; padding:10px 4px; margin-right:14px;
+    cursor:pointer;
+  }
+  .page-tab:hover{color:var(--ink);}
+  .page-tab.active{color:var(--purple); border-bottom-color:var(--purple);}
   .lock-screen{
     max-width:360px; margin:120px auto; text-align:center; padding:36px; background:#fff;
     border:1px solid var(--line); border-radius:16px;
@@ -70,8 +78,8 @@
 
   <div class="admin-wrap">
     <div class="admin-head">
-      <h1>Edit landing page wording</h1>
-      <p>Change any field below, then use the buttons above to preview or publish. Nav labels, page layout, and the other 13 pages aren't wired to this yet — just the landing page copy.</p>
+      <h1>Edit page wording</h1>
+      <p>Pick a page below, change any field, then use the buttons above to preview or publish. Nav labels, page layout, and the other 11 pages aren't wired to this yet — just the three below.</p>
     </div>
 
     <fieldset id="ghSettings">
@@ -108,6 +116,7 @@
     <div class="admin-note">
       <strong>How this actually publishes:</strong> "Publish to GitHub" commits the updated <code>content.json</code> straight to your repo using the token above. Vercel picks up the new commit and redeploys automatically — usually live within a minute or two. "Download" is a manual backup option if you'd rather not use a token.
     </div>
+    <div class="page-tabs" id="pageTabs"></div>
     <form id="adminForm"></form>
   </div>
 </div>
@@ -132,7 +141,7 @@
   }
 
   // ---- Schema: path into content.json, label, field type, section group ----
-  var SCHEMA = [
+  var SCHEMA_HOME = [
     { group: 'Hero', path: 'hero.eyebrow', label: 'Eyebrow label', type: 'text' },
     { group: 'Hero', path: 'hero.subheading', label: 'Subheading (below the big title)', type: 'textarea' },
     { group: 'Hero', path: 'hero.dek', label: 'Intro paragraph', type: 'textarea' },
@@ -199,6 +208,92 @@
     { group: 'Footer', path: 'footer.blurb', label: 'Footer blurb', type: 'textarea' }
   ];
 
+  var SCHEMA_MULTI = [
+    { group: 'Page Header', path: 'multisensoryLearning.hero.eyebrow', label: 'Eyebrow label', type: 'text' },
+    { group: 'Page Header', path: 'multisensoryLearning.hero.heading', label: 'Heading', type: 'text' },
+    { group: 'Page Header', path: 'multisensoryLearning.hero.dek', label: 'Dek text', type: 'textarea' },
+
+    { group: 'Intro', path: 'multisensoryLearning.intro', label: 'Intro paragraph', type: 'textarea' },
+
+    { group: 'Sense 1 — Color', path: 'multisensoryLearning.senses.0.label', label: 'Label', type: 'text' },
+    { group: 'Sense 1 — Color', path: 'multisensoryLearning.senses.0.tag', label: 'Tag', type: 'text' },
+    { group: 'Sense 1 — Color', path: 'multisensoryLearning.senses.0.body', label: 'Body', type: 'textarea' },
+    { group: 'Sense 1 — Color', path: 'multisensoryLearning.senses.0.items.0', label: 'Bullet 1', type: 'textarea' },
+    { group: 'Sense 1 — Color', path: 'multisensoryLearning.senses.0.items.1', label: 'Bullet 2', type: 'textarea' },
+    { group: 'Sense 1 — Color', path: 'multisensoryLearning.senses.0.items.2', label: 'Bullet 3', type: 'textarea' },
+
+    { group: 'Sense 2 — Movement', path: 'multisensoryLearning.senses.1.label', label: 'Label', type: 'text' },
+    { group: 'Sense 2 — Movement', path: 'multisensoryLearning.senses.1.tag', label: 'Tag', type: 'text' },
+    { group: 'Sense 2 — Movement', path: 'multisensoryLearning.senses.1.body', label: 'Body', type: 'textarea' },
+    { group: 'Sense 2 — Movement', path: 'multisensoryLearning.senses.1.items.0', label: 'Bullet 1', type: 'textarea' },
+    { group: 'Sense 2 — Movement', path: 'multisensoryLearning.senses.1.items.1', label: 'Bullet 2', type: 'textarea' },
+    { group: 'Sense 2 — Movement', path: 'multisensoryLearning.senses.1.items.2', label: 'Bullet 3', type: 'textarea' },
+
+    { group: 'Sense 3 — Sound', path: 'multisensoryLearning.senses.2.label', label: 'Label', type: 'text' },
+    { group: 'Sense 3 — Sound', path: 'multisensoryLearning.senses.2.tag', label: 'Tag', type: 'text' },
+    { group: 'Sense 3 — Sound', path: 'multisensoryLearning.senses.2.body', label: 'Body', type: 'textarea' },
+    { group: 'Sense 3 — Sound', path: 'multisensoryLearning.senses.2.items.0', label: 'Bullet 1', type: 'textarea' },
+    { group: 'Sense 3 — Sound', path: 'multisensoryLearning.senses.2.items.1', label: 'Bullet 2', type: 'textarea' },
+    { group: 'Sense 3 — Sound', path: 'multisensoryLearning.senses.2.items.2', label: 'Bullet 3', type: 'textarea' },
+
+    { group: 'Sense 4 — Story', path: 'multisensoryLearning.senses.3.label', label: 'Label', type: 'text' },
+    { group: 'Sense 4 — Story', path: 'multisensoryLearning.senses.3.tag', label: 'Tag', type: 'text' },
+    { group: 'Sense 4 — Story', path: 'multisensoryLearning.senses.3.body', label: 'Body', type: 'textarea' },
+    { group: 'Sense 4 — Story', path: 'multisensoryLearning.senses.3.items.0', label: 'Bullet 1', type: 'textarea' },
+    { group: 'Sense 4 — Story', path: 'multisensoryLearning.senses.3.items.1', label: 'Bullet 2', type: 'textarea' },
+    { group: 'Sense 4 — Story', path: 'multisensoryLearning.senses.3.items.2', label: 'Bullet 3', type: 'textarea' },
+
+    { group: 'Sense 5 — Touch', path: 'multisensoryLearning.senses.4.label', label: 'Label', type: 'text' },
+    { group: 'Sense 5 — Touch', path: 'multisensoryLearning.senses.4.tag', label: 'Tag', type: 'text' },
+    { group: 'Sense 5 — Touch', path: 'multisensoryLearning.senses.4.body', label: 'Body', type: 'textarea' },
+    { group: 'Sense 5 — Touch', path: 'multisensoryLearning.senses.4.items.0', label: 'Bullet 1', type: 'textarea' },
+    { group: 'Sense 5 — Touch', path: 'multisensoryLearning.senses.4.items.1', label: 'Bullet 2', type: 'textarea' },
+    { group: 'Sense 5 — Touch', path: 'multisensoryLearning.senses.4.items.2', label: 'Bullet 3', type: 'textarea' }
+  ];
+
+  var SCHEMA_HISTORY = [
+    { group: 'Page Header', path: 'history.hero.eyebrow', label: 'Eyebrow label', type: 'text' },
+    { group: 'Page Header', path: 'history.hero.heading', label: 'Heading', type: 'text' },
+    { group: 'Page Header', path: 'history.hero.dek', label: 'Dek text', type: 'textarea' },
+
+    { group: 'Timeline entry 1', path: 'history.timeline.0.year', label: 'Year', type: 'text' },
+    { group: 'Timeline entry 1', path: 'history.timeline.0.title', label: 'Title', type: 'text' },
+    { group: 'Timeline entry 1', path: 'history.timeline.0.body', label: 'Body', type: 'textarea' },
+
+    { group: 'Timeline entry 2', path: 'history.timeline.1.year', label: 'Year', type: 'text' },
+    { group: 'Timeline entry 2', path: 'history.timeline.1.title', label: 'Title', type: 'text' },
+    { group: 'Timeline entry 2', path: 'history.timeline.1.body', label: 'Body', type: 'textarea' },
+
+    { group: 'Timeline entry 3', path: 'history.timeline.2.year', label: 'Year', type: 'text' },
+    { group: 'Timeline entry 3', path: 'history.timeline.2.title', label: 'Title', type: 'text' },
+    { group: 'Timeline entry 3', path: 'history.timeline.2.body', label: 'Body', type: 'textarea' },
+
+    { group: 'Timeline entry 4', path: 'history.timeline.3.year', label: 'Year', type: 'text' },
+    { group: 'Timeline entry 4', path: 'history.timeline.3.title', label: 'Title', type: 'text' },
+    { group: 'Timeline entry 4', path: 'history.timeline.3.body', label: 'Body', type: 'textarea' },
+
+    { group: 'Timeline entry 5', path: 'history.timeline.4.year', label: 'Year', type: 'text' },
+    { group: 'Timeline entry 5', path: 'history.timeline.4.title', label: 'Title', type: 'text' },
+    { group: 'Timeline entry 5', path: 'history.timeline.4.body', label: 'Body', type: 'textarea' },
+
+    { group: 'Timeline entry 6', path: 'history.timeline.5.year', label: 'Year', type: 'text' },
+    { group: 'Timeline entry 6', path: 'history.timeline.5.title', label: 'Title', type: 'text' },
+    { group: 'Timeline entry 6', path: 'history.timeline.5.body', label: 'Body', type: 'textarea' }
+  ];
+
+  var PAGES = [
+    { id: 'home', label: 'Landing Page', schema: SCHEMA_HOME, previewUrl: 'index.html' },
+    { id: 'multisensory', label: 'Multisensory Learning', schema: SCHEMA_MULTI, previewUrl: 'pages/multisensory-learning.html' },
+    { id: 'history', label: 'History', schema: SCHEMA_HISTORY, previewUrl: 'pages/history.html' }
+  ];
+  var currentPageId = PAGES[0].id;
+
+  function currentPage() {
+    var found = null;
+    PAGES.forEach(function (p) { if (p.id === currentPageId) found = p; });
+    return found;
+  }
+
   var content = null;
 
   function getPath(obj, path) {
@@ -211,10 +306,28 @@
     cur[keys[keys.length - 1]] = value;
   }
 
+  function buildTabs() {
+    var tabs = document.getElementById('pageTabs');
+    tabs.innerHTML = '';
+    PAGES.forEach(function (p) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'page-tab' + (p.id === currentPageId ? ' active' : '');
+      btn.textContent = p.label;
+      btn.addEventListener('click', function () {
+        currentPageId = p.id;
+        buildTabs();
+        buildForm();
+      });
+      tabs.appendChild(btn);
+    });
+  }
+
   function buildForm() {
     var form = document.getElementById('adminForm');
+    form.innerHTML = '';
     var groups = {};
-    SCHEMA.forEach(function (f) {
+    currentPage().schema.forEach(function (f) {
       groups[f.group] = groups[f.group] || [];
       groups[f.group].push(f);
     });
@@ -255,6 +368,7 @@
       .then(function (res) { return res.json(); })
       .then(function (data) {
         content = data;
+        buildTabs();
         buildForm();
         document.getElementById('statusText').textContent = 'Loaded content.json';
       })
@@ -336,7 +450,7 @@
           method: 'PUT',
           headers: Object.assign({ 'Content-Type': 'application/json' }, headers),
           body: JSON.stringify({
-            message: 'Update landing page wording via admin',
+            message: 'Update page wording via admin',
             content: toBase64Utf8(JSON.stringify(content, null, 2)),
             sha: fileData.sha,
             branch: branch
@@ -360,7 +474,7 @@
   document.getElementById('publishBtn').addEventListener('click', publishToGithub);
 
   document.getElementById('previewBtn').addEventListener('click', function () {
-    window.open('index.html?preview=1', '_blank');
+    window.open(currentPage().previewUrl + '?preview=1', '_blank');
   });
 
   document.getElementById('downloadBtn').addEventListener('click', function () {
