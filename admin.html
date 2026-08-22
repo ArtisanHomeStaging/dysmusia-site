@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — The Dysmusia Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body{background:var(--paper-card);}
+  .admin-wrap{max-width:760px; margin:0 auto; padding:48px 28px 100px;}
+  .admin-head{margin-bottom:8px;}
+  .admin-head h1{font-size:28px; font-weight:600; margin-bottom:8px;}
+  .admin-head p{font-size:14px; color:var(--ink-soft); max-width:60ch;}
+  .admin-note{
+    background:var(--lavender); border-left:3px solid var(--purple); border-radius:10px;
+    padding:16px 20px; font-size:13.5px; color:var(--ink); margin:20px 0 36px; line-height:1.6;
+  }
+  .admin-actions{
+    position:sticky; top:0; z-index:20; background:var(--paper-card); border-bottom:1px solid var(--line);
+    padding:16px 28px; display:flex; gap:10px; align-items:center; margin:0 -28px 36px; flex-wrap:wrap;
+  }
+  .admin-actions .status{font-size:12.5px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+  fieldset{border:1px solid var(--line); border-radius:14px; padding:22px 24px; margin:0 0 24px; background:#fff;}
+  legend{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.1em;
+    color:var(--purple); padding:0 8px;
+  }
+  .field{margin-bottom:16px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{display:block; font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+  .field input[type=text], .field textarea{
+    width:100%; font-family:'Inter',sans-serif; font-size:14.5px; padding:10px 12px;
+    border:1px solid var(--line); border-radius:8px; background:var(--paper); color:var(--ink);
+  }
+  .field textarea{min-height:70px; resize:vertical;}
+  .field input:focus, .field textarea:focus{outline:2px solid var(--purple); outline-offset:1px;}
+  .lock-screen{
+    max-width:360px; margin:120px auto; text-align:center; padding:36px; background:#fff;
+    border:1px solid var(--line); border-radius:16px;
+  }
+  .lock-screen h1{font-size:20px; margin-bottom:10px;}
+  .lock-screen p{font-size:13px; color:var(--ink-soft); margin-bottom:20px;}
+  .lock-screen input{
+    width:100%; padding:11px 14px; border:1px solid var(--line); border-radius:8px; margin-bottom:12px; font-size:14px;
+  }
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+
+<div id="lockScreen" class="lock-screen">
+  <h1>Dysmusia Admin</h1>
+  <p>This is a lightweight, no-database editor — not real login security. Anyone with this URL and passphrase can reach it, so don't link it publicly.</p>
+  <input type="password" id="passphrase" placeholder="Passphrase">
+  <button class="btn purple" style="width:100%; justify-content:center;" id="unlockBtn">Enter</button>
+  <p id="lockError" style="color:#B33; font-size:12.5px; margin-top:10px; display:none;">Wrong passphrase.</p>
+</div>
+
+<div id="adminApp" class="hidden">
+  <div class="admin-actions wrap">
+    <button class="btn purple" id="previewBtn" type="button">Open live preview ↗</button>
+    <button class="btn gold" id="publishBtn" type="button">Publish to GitHub</button>
+    <button class="btn ghost" id="downloadBtn" type="button">Download content.json</button>
+    <span class="status" id="statusText">Loading content.json…</span>
+  </div>
+
+  <div class="admin-wrap">
+    <div class="admin-head">
+      <h1>Edit landing page wording</h1>
+      <p>Change any field below, then use the buttons above to preview or publish. Nav labels, page layout, and the other 13 pages aren't wired to this yet — just the landing page copy.</p>
+    </div>
+
+    <fieldset id="ghSettings">
+      <legend>GitHub connection</legend>
+      <div class="field">
+        <label for="ghOwner">Repo owner (your GitHub username or org)</label>
+        <input type="text" id="ghOwner" placeholder="e.g. janedoe">
+      </div>
+      <div class="field">
+        <label for="ghRepo">Repository name</label>
+        <input type="text" id="ghRepo" placeholder="e.g. dysmusia-site">
+      </div>
+      <div class="field">
+        <label for="ghBranch">Branch</label>
+        <input type="text" id="ghBranch" placeholder="main">
+      </div>
+      <div class="field">
+        <label for="ghPath">Path to content.json in the repo</label>
+        <input type="text" id="ghPath" placeholder="content.json">
+      </div>
+      <div class="field">
+        <label for="ghToken">Personal access token</label>
+        <input type="password" id="ghToken" placeholder="ghp_...">
+      </div>
+      <div class="field" style="display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" id="ghRemember" style="width:auto;" checked>
+        <label for="ghRemember" style="margin:0;">Remember on this device (stored in this browser only)</label>
+      </div>
+      <p style="font-size:12px; color:var(--ink-soft); margin:12px 0 0; line-height:1.6;">
+        Create a token at <strong>github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens</strong>. Scope it to only this one repository, with <strong>Contents: Read and write</strong> permission — nothing else.
+      </p>
+    </fieldset>
+
+    <div class="admin-note">
+      <strong>How this actually publishes:</strong> "Publish to GitHub" commits the updated <code>content.json</code> straight to your repo using the token above. Vercel picks up the new commit and redeploys automatically — usually live within a minute or two. "Download" is a manual backup option if you'd rather not use a token.
+    </div>
+    <form id="adminForm"></form>
+  </div>
+</div>
+
+<script>
+  // ---- Not real security — just keeps this out of casual reach. ----
+  var PASSPHRASE = 'dysmusia2026';
+
+  document.getElementById('unlockBtn').addEventListener('click', unlock);
+  document.getElementById('passphrase').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') unlock();
+  });
+  function unlock() {
+    var val = document.getElementById('passphrase').value;
+    if (val === PASSPHRASE) {
+      document.getElementById('lockScreen').classList.add('hidden');
+      document.getElementById('adminApp').classList.remove('hidden');
+      init();
+    } else {
+      document.getElementById('lockError').style.display = 'block';
+    }
+  }
+
+  // ---- Schema: path into content.json, label, field type, section group ----
+  var SCHEMA = [
+    { group: 'Hero', path: 'hero.eyebrow', label: 'Eyebrow label', type: 'text' },
+    { group: 'Hero', path: 'hero.subheading', label: 'Subheading (below the big title)', type: 'textarea' },
+    { group: 'Hero', path: 'hero.dek', label: 'Intro paragraph', type: 'textarea' },
+    { group: 'Hero', path: 'hero.ctaPrimary', label: 'Primary button text', type: 'text' },
+    { group: 'Hero', path: 'hero.ctaSecondary', label: 'Secondary button text', type: 'text' },
+    { group: 'Hero', path: 'hero.calloutEyebrow', label: 'Callout label', type: 'text' },
+    { group: 'Hero', path: 'hero.calloutText', label: 'Callout text', type: 'textarea' },
+
+    { group: 'Start Here', path: 'start.eyebrow', label: 'Section label', type: 'text' },
+    { group: 'Start Here', path: 'start.heading', label: 'Section heading', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.0.eyebrow', label: 'Card 1 — label', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.0.title', label: 'Card 1 — title', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.0.body', label: 'Card 1 — body', type: 'textarea' },
+    { group: 'Start Here', path: 'start.cards.1.eyebrow', label: 'Card 2 — label', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.1.title', label: 'Card 2 — title', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.1.body', label: 'Card 2 — body', type: 'textarea' },
+    { group: 'Start Here', path: 'start.cards.2.eyebrow', label: 'Card 3 — label', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.2.title', label: 'Card 3 — title', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.2.body', label: 'Card 3 — body', type: 'textarea' },
+    { group: 'Start Here', path: 'start.cards.3.eyebrow', label: 'Card 4 — label', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.3.title', label: 'Card 4 — title', type: 'text' },
+    { group: 'Start Here', path: 'start.cards.3.body', label: 'Card 4 — body', type: 'textarea' },
+
+    { group: 'Recognition', path: 'recognition.eyebrow', label: 'Section label', type: 'text' },
+    { group: 'Recognition', path: 'recognition.heading', label: 'Section heading', type: 'text' },
+    { group: 'Recognition', path: 'recognition.intro', label: 'Intro text', type: 'textarea' },
+    { group: 'Recognition', path: 'recognition.quotes.0', label: 'Quote 1', type: 'textarea' },
+    { group: 'Recognition', path: 'recognition.quotes.1', label: 'Quote 2', type: 'textarea' },
+    { group: 'Recognition', path: 'recognition.quotes.2', label: 'Quote 3', type: 'textarea' },
+    { group: 'Recognition', path: 'recognition.quotes.3', label: 'Quote 4', type: 'textarea' },
+    { group: 'Recognition', path: 'recognition.linkText', label: 'Link text', type: 'text' },
+
+    { group: 'Four Ways In', path: 'ways.eyebrow', label: 'Section label', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.heading', label: 'Section heading', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.intro', label: 'Intro text', type: 'textarea' },
+    { group: 'Four Ways In', path: 'ways.items.0.tag', label: 'Item 1 — tag', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.items.0.title', label: 'Item 1 — title', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.items.0.body', label: 'Item 1 — body', type: 'textarea' },
+    { group: 'Four Ways In', path: 'ways.items.1.tag', label: 'Item 2 — tag', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.items.1.title', label: 'Item 2 — title', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.items.1.body', label: 'Item 2 — body', type: 'textarea' },
+    { group: 'Four Ways In', path: 'ways.items.2.tag', label: 'Item 3 — tag', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.items.2.title', label: 'Item 3 — title', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.items.2.body', label: 'Item 3 — body', type: 'textarea' },
+    { group: 'Four Ways In', path: 'ways.items.3.tag', label: 'Item 4 — tag', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.items.3.title', label: 'Item 4 — title', type: 'text' },
+    { group: 'Four Ways In', path: 'ways.items.3.body', label: 'Item 4 — body', type: 'textarea' },
+    { group: 'Four Ways In', path: 'ways.linkText', label: 'Link text', type: 'text' },
+
+    { group: 'Research', path: 'research.eyebrow', label: 'Section label', type: 'text' },
+    { group: 'Research', path: 'research.heading', label: 'Section heading', type: 'text' },
+    { group: 'Research', path: 'research.body', label: 'Body text', type: 'textarea' },
+    { group: 'Research', path: 'research.links.0.label', label: 'Link 1 text', type: 'text' },
+    { group: 'Research', path: 'research.links.1.label', label: 'Link 2 text', type: 'text' },
+    { group: 'Research', path: 'research.links.2.label', label: 'Link 3 text', type: 'text' },
+
+    { group: 'Email Capture', path: 'capture.eyebrow', label: 'Section label', type: 'text' },
+    { group: 'Email Capture', path: 'capture.heading', label: 'Heading', type: 'text' },
+    { group: 'Email Capture', path: 'capture.body', label: 'Body text', type: 'textarea' },
+    { group: 'Email Capture', path: 'capture.buttonLabel', label: 'Button text', type: 'text' },
+    { group: 'Email Capture', path: 'capture.note', label: 'Fine print', type: 'text' },
+    { group: 'Email Capture', path: 'capture.successText', label: 'Success message', type: 'text' },
+
+    { group: 'Footer', path: 'footer.blurb', label: 'Footer blurb', type: 'textarea' }
+  ];
+
+  var content = null;
+
+  function getPath(obj, path) {
+    return path.split('.').reduce(function (o, k) { return o && o[k] !== undefined ? o[k] : undefined; }, obj);
+  }
+  function setPath(obj, path, value) {
+    var keys = path.split('.');
+    var cur = obj;
+    for (var i = 0; i < keys.length - 1; i++) cur = cur[keys[i]];
+    cur[keys[keys.length - 1]] = value;
+  }
+
+  function buildForm() {
+    var form = document.getElementById('adminForm');
+    var groups = {};
+    SCHEMA.forEach(function (f) {
+      groups[f.group] = groups[f.group] || [];
+      groups[f.group].push(f);
+    });
+    Object.keys(groups).forEach(function (groupName) {
+      var fieldset = document.createElement('fieldset');
+      var legend = document.createElement('legend');
+      legend.textContent = groupName;
+      fieldset.appendChild(legend);
+      groups[groupName].forEach(function (f) {
+        var wrap = document.createElement('div');
+        wrap.className = 'field';
+        var label = document.createElement('label');
+        label.textContent = f.label;
+        label.setAttribute('for', f.path);
+        wrap.appendChild(label);
+        var input = document.createElement(f.type === 'textarea' ? 'textarea' : 'input');
+        if (f.type !== 'textarea') input.type = 'text';
+        input.id = f.path;
+        input.value = getPath(content, f.path) || '';
+        input.addEventListener('input', function () {
+          setPath(content, f.path, input.value);
+          savePreviewDraft();
+        });
+        wrap.appendChild(input);
+        fieldset.appendChild(wrap);
+      });
+      form.appendChild(fieldset);
+    });
+  }
+
+  function savePreviewDraft() {
+    localStorage.setItem('dysmusia_preview_content', JSON.stringify(content));
+    document.getElementById('statusText').textContent = 'Unsaved edits — preview updated, not yet exported';
+  }
+
+  function init() {
+    fetch('content.json')
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        content = data;
+        buildForm();
+        document.getElementById('statusText').textContent = 'Loaded content.json';
+      })
+      .catch(function (err) {
+        document.getElementById('statusText').textContent = 'Could not load content.json — is this page being served (not opened as a local file)?';
+        console.error(err);
+      });
+  }
+
+  // ---- GitHub connection settings (remembered per-device in localStorage) ----
+  var GH_FIELDS = ['ghOwner', 'ghRepo', 'ghBranch', 'ghPath', 'ghToken'];
+  var GH_STORAGE_PREFIX = 'dysmusia_gh_';
+
+  function loadGhSettings() {
+    GH_FIELDS.forEach(function (id) {
+      var saved = localStorage.getItem(GH_STORAGE_PREFIX + id);
+      if (saved !== null) document.getElementById(id).value = saved;
+    });
+    var rememberSaved = localStorage.getItem(GH_STORAGE_PREFIX + 'remember');
+    document.getElementById('ghRemember').checked = rememberSaved !== 'false';
+    if (!document.getElementById('ghBranch').value) document.getElementById('ghBranch').value = 'main';
+    if (!document.getElementById('ghPath').value) document.getElementById('ghPath').value = 'content.json';
+  }
+
+  function saveGhSettings() {
+    var remember = document.getElementById('ghRemember').checked;
+    localStorage.setItem(GH_STORAGE_PREFIX + 'remember', remember);
+    GH_FIELDS.forEach(function (id) {
+      var keep = remember || id !== 'ghToken'; // always keep owner/repo/branch/path; only the token is conditional
+      if (keep) {
+        localStorage.setItem(GH_STORAGE_PREFIX + id, document.getElementById(id).value);
+      } else {
+        localStorage.removeItem(GH_STORAGE_PREFIX + id);
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    loadGhSettings();
+    GH_FIELDS.concat(['ghRemember']).forEach(function (id) {
+      document.getElementById(id).addEventListener('change', saveGhSettings);
+    });
+  });
+
+  function toBase64Utf8(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+
+  function publishToGithub() {
+    var owner = document.getElementById('ghOwner').value.trim();
+    var repo = document.getElementById('ghRepo').value.trim();
+    var branch = document.getElementById('ghBranch').value.trim() || 'main';
+    var path = document.getElementById('ghPath').value.trim() || 'content.json';
+    var token = document.getElementById('ghToken').value.trim();
+
+    if (!owner || !repo || !token) {
+      document.getElementById('statusText').textContent = 'Fill in owner, repo, and token first';
+      return;
+    }
+
+    saveGhSettings();
+
+    var apiUrl = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + path;
+    var headers = {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json'
+    };
+
+    document.getElementById('statusText').textContent = 'Publishing…';
+    document.getElementById('publishBtn').disabled = true;
+
+    fetch(apiUrl + '?ref=' + encodeURIComponent(branch), { headers: headers })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Could not read current file (status ' + res.status + '). Check owner/repo/path/token.');
+        return res.json();
+      })
+      .then(function (fileData) {
+        return fetch(apiUrl, {
+          method: 'PUT',
+          headers: Object.assign({ 'Content-Type': 'application/json' }, headers),
+          body: JSON.stringify({
+            message: 'Update landing page wording via admin',
+            content: toBase64Utf8(JSON.stringify(content, null, 2)),
+            sha: fileData.sha,
+            branch: branch
+          })
+        });
+      })
+      .then(function (res) {
+        if (!res.ok) return res.json().then(function (data) { throw new Error(data.message || 'Publish failed'); });
+        localStorage.removeItem('dysmusia_preview_content');
+        document.getElementById('statusText').textContent = 'Published — live on Vercel in about a minute';
+      })
+      .catch(function (err) {
+        console.error(err);
+        document.getElementById('statusText').textContent = 'Error: ' + err.message;
+      })
+      .finally(function () {
+        document.getElementById('publishBtn').disabled = false;
+      });
+  }
+
+  document.getElementById('publishBtn').addEventListener('click', publishToGithub);
+
+  document.getElementById('previewBtn').addEventListener('click', function () {
+    window.open('index.html?preview=1', '_blank');
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'content.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    document.getElementById('statusText').textContent = 'Downloaded — now replace content.json in your repo';
+  });
+</script>
+</body>
+</html>

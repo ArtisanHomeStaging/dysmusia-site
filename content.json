@@ -1,0 +1,83 @@
+{
+  "hero": {
+    "eyebrow": "Musical dyslexia · not officially diagnosed, but real",
+    "subheading": "The notes are right there on the page. So why won't they hold still?",
+    "dek": "Dysmusia is a persistent difficulty reading, learning, or recognizing music — present since childhood, unrelated to effort or intelligence. It isn't an official diagnosis yet, but it's a real, recognizable pattern with a name and a growing body of research behind it.",
+    "ctaPrimary": "Does this sound like you?",
+    "ctaSecondary": "What is dysmusia?",
+    "calloutEyebrow": "Worth saying up front",
+    "calloutText": "Struggling to read music does not mean struggling to understand or make it. Some of the most accomplished musicians in history have worked almost entirely by ear."
+  },
+  "start": {
+    "eyebrow": "Four places to start",
+    "heading": "Start here",
+    "cards": [
+      {
+        "eyebrow": "01 — Understand it",
+        "title": "What is dysmusia?",
+        "body": "The plain-language definition, what it looks like day to day, and how it differs from a formal diagnosis."
+      },
+      {
+        "eyebrow": "02 — Recognize it",
+        "title": "Does this sound like you?",
+        "body": "First-person experiences common to people with dysmusia, in their own words."
+      },
+      {
+        "eyebrow": "03 — Try strategies",
+        "title": "Multisensory learning",
+        "body": "Visual, auditory, kinesthetic, and imaginative ways to make notation click when reading alone doesn't work."
+      },
+      {
+        "eyebrow": "04 — Explore research",
+        "title": "What researchers know",
+        "body": "The primary studies, summarized in plain language, plus what's still genuinely unknown."
+      }
+    ]
+  },
+  "recognition": {
+    "eyebrow": "Recognize yourself?",
+    "heading": "\"I can play it — I just can't read it.\"",
+    "intro": "These are things people with dysmusia commonly say about their own experience. See how many land.",
+    "quotes": [
+      "I can play something after hearing it, but reading it is difficult.",
+      "The notes seem to blur together on the staff.",
+      "A rhythm I practiced yesterday feels brand new today.",
+      "Teachers assume I just haven't practiced."
+    ],
+    "linkText": "Read the full list →"
+  },
+  "ways": {
+    "eyebrow": "Strategies that actually help",
+    "heading": "Four ways in, when reading alone doesn't work",
+    "intro": "Multisensory instruction is well established for language-based dyslexia. The same logic applies to music: route the same information through more than one sense at once.",
+    "items": [
+      { "tag": "See it", "title": "Visual", "body": "Color-coded notes and staff positions turn an abstract symbol into a pattern the eye catches quickly." },
+      { "tag": "Hear it", "title": "Auditory", "body": "Listening to a phrase before reading it gives the ear a target to match the page against." },
+      { "tag": "Feel it", "title": "Kinesthetic", "body": "Walking a floor staff, hand-signing pitch, or tracing notation adds movement and touch to the memory." },
+      { "tag": "Picture it", "title": "Imagination", "body": "A short mnemonic or character gives working memory something more durable than an abstract mark." }
+    ],
+    "linkText": "See the full approach →"
+  },
+  "research": {
+    "eyebrow": "Honest about the evidence",
+    "heading": "The research is real, but still thin.",
+    "body": "There isn't yet a large body of research specifically on music-reading difficulty, especially compared to dyslexia. What exists — from congenital amusia research to specialist case studies — suggests a real relationship worth taking seriously, alongside promising evidence that multisensory teaching helps.",
+    "links": [
+      { "label": "Plain-language summaries", "href": "pages/research-summaries.html" },
+      { "label": "Primary literature", "href": "pages/research.html" },
+      { "label": "How the field got here", "href": "pages/history.html" }
+    ]
+  },
+  "capture": {
+    "eyebrow": "If a few of those quotes felt familiar",
+    "heading": "Get the free guide",
+    "body": "What dysmusia is, how evaluation works, classroom accommodations, and how to talk to a music teacher about it.",
+    "placeholder": "you@email.com",
+    "buttonLabel": "Send it",
+    "note": "One email. No spam. Unsubscribe anytime.",
+    "successText": "✓ Sent — check your inbox in a minute."
+  },
+  "footer": {
+    "blurb": "An independent, informational project exploring why some capable musicians struggle to read music — and finding better ways to teach them. Not a diagnostic tool or medical advice."
+  }
+}
